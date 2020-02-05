@@ -1,5 +1,7 @@
 import logging
+import datetime
 from gazpacho import get, Soup
+from klaxon import klaxonify
 
 ENDPOINT = 'https://obmenka24.kiev.ua/ua'
 DEFAULT_CURRENCY = 'USD/UAH'
@@ -9,6 +11,7 @@ NAME = 'currencies__block-name'
 BUY = 'currencies__block-buy'
 SALE = 'currencies__block-sale'
 NUM = 'currencies__block-num'
+TODAY = f'{datetime.datetime.now().strftime("%A, %d %B")}'
 
 
 def get_currency_rates(url: str) -> dict:
@@ -39,12 +42,13 @@ def get_all_currencies(rates: dict) -> list:
     return [currency for currency in rates]
 
 
+@klaxonify(title=TODAY, output_as_message=True)
 def get_specific_currency_info(rates: dict, curr: str = DEFAULT_CURRENCY):
     """Return information for specific currency"""
 
     currency_info = rates.get(curr)
     if currency_info:
-        return f'Current rate for {curr} is {currency_info}'
+        return f'Rate for {curr}: {currency_info}'
     else:
         return 'Check currency name and try again.'
 
