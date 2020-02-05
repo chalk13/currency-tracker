@@ -1,4 +1,3 @@
-import argparse
 import logging
 from gazpacho import get, Soup
 
@@ -33,11 +32,23 @@ def get_currency_rates(url: str) -> dict:
 
     return result
 
+
 def get_all_currencies(rates: dict) -> list:
     """Return list of all currencies"""
 
     return [currency for currency in rates]
 
+
+def get_specific_currency_info(rates: dict, curr: str = DEFAULT_CURRENCY):
+    """Return information for specific currency"""
+
+    currency_info = rates.get(curr)
+    if currency_info:
+        return f'Current rate for {curr} is {currency_info}'
+    else:
+        return 'Check currency name and try again.'
+
+
 if __name__ == '__main__':
     result = get_currency_rates(ENDPOINT)
-    print(get_all_currencies(result))
+    print(get_specific_currency_info(result))
