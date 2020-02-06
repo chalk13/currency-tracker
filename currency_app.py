@@ -1,5 +1,7 @@
 import logging
 import datetime
+import schedule
+import time
 from gazpacho import get, Soup
 from klaxon import klaxonify
 
@@ -53,6 +55,18 @@ def get_specific_currency_info(rates: dict, curr: str = DEFAULT_CURRENCY):
         return 'Check currency name and try again.'
 
 
-if __name__ == '__main__':
+def every_day_notification():
+    """Send notification with actual rates"""
+
     result = get_currency_rates(ENDPOINT)
-    print(get_specific_currency_info(result))
+    get_specific_currency_info(result)
+
+
+# scheduler to send notifications every hour
+schedule.every().hour.do(every_day_notification)
+
+
+if __name__ == '__main__':
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
