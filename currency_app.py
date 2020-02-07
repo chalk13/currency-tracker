@@ -40,7 +40,7 @@ def get_specific_currency_info(rates: dict, curr: str = DEFAULT_CURRENCY):
 
     currency_info = rates.get(curr)
     if currency_info:
-        return f'Rate for {curr}: {currency_info}'
+        return f'Rate for {curr}: {currency_info["buy"]}/{currency_info["sale"]}'
     else:
         return 'Check currency name and try again.'
 
