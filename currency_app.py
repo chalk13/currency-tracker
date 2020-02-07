@@ -1,19 +1,9 @@
 import logging
-import datetime
 import schedule
 import time
 from gazpacho import get, Soup
 from klaxon import klaxonify
-
-ENDPOINT = 'https://obmenka24.kiev.ua/ua'
-DEFAULT_CURRENCY = 'USD/UAH'
-
-# endpoint classes names
-NAME = 'currencies__block-name'
-BUY = 'currencies__block-buy'
-SALE = 'currencies__block-sale'
-NUM = 'currencies__block-num'
-TODAY = f'{datetime.datetime.now().strftime("%A, %d %B")}'
+from config import ENDPOINT, DEFAULT_CURRENCY, TODAY, NAME, BUY, SALE, NUM
 
 
 def get_currency_rates(url: str) -> dict:
