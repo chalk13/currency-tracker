@@ -16,10 +16,11 @@ def argument_parser():
                   "get currency rates on regular basis"
 
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument('--all', type=bool, default=False, nargs='?',
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--all', type=bool, default=False, nargs='?',
                         choices=[True, False],
                         help='get list of availiable currencies')
-    parser.add_argument('--change', type=str, nargs='?',
+    group.add_argument('--change', type=str, nargs='?',
                         help='change default currency to desired')
 
     return parser
