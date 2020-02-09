@@ -75,8 +75,8 @@ def get_specific_currency_info(curr: str = DEFAULT_CURRENCY):
 
 @klaxonify(title='Check the changes', output_as_message=True)
 def show_changed_currency_info(last: dict, new: dict, curr: str = DEFAULT_CURRENCY):
-    up = '\u25B2'
-    down = '\u25BC'
+    up = '\u2191'
+    down = '\u2193'
     if last['buy'] < new['buy'] or last['sale'] < new['sale']:
         return f'{curr} rate increased:' \
                f'\n{new["buy"]} {up}{round(new["buy"] - last["buy"], 2)} || ' \
