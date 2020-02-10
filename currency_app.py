@@ -77,12 +77,22 @@ def get_specific_currency_info(curr: str = DEFAULT_CURRENCY):
 def show_changed_currency_info(last: dict, new: dict, curr: str = DEFAULT_CURRENCY):
     up = '\u2191'
     down = '\u2193'
-    if last['buy'] < new['buy'] or last['sale'] < new['sale']:
-        return f'{curr} rate increased:' \
-               f'\n{new["buy"]} {up}{round(new["buy"] - last["buy"], 2)} || ' \
-               f'{new["sale"]} {down}{round(new["sale"] - last["sale"], 2)}'
 
-    # TODO: implement logic
+    if last['buy'] < new['buy']:
+        buy_value = f"\n{new['buy']} {up}{round(new['buy'] - last['buy'], 2)}"
+    elif last['buy'] > new['buy']:
+        buy_value = f"\n{new['buy']} {down}{round(last['buy'] - new['buy'], 2)}"
+    else:
+        buy_value = f"\n{new['buy']}"
+
+    if last['sale'] < new['sale']:
+        sale_value = f"{new['sale']} {up}{round(new['sale'] - last['sale'], 2)}"
+    elif last['sale'] > new['sale']:
+        sale_value = f"{new['sale']} {down}{round(last['sale'] - new['sale'], 2)}"
+    else:
+        sale_value = f"{new['sale']}"
+
+    return f'{curr} rate increased: {buy_value} || {sale_value}'
 
 
 def every_day_notification(curr: str = DEFAULT_CURRENCY):
@@ -111,7 +121,9 @@ def main():
         except Exception as err:
             logging.exception(err)
         else:
-            if last_currency != value:
+            if last_currency is None:
+                last_currency = value
+            elif last_currency != value:
                 show_changed_currency_info(last_currency, value)
                 last_currency = value
         finally:
