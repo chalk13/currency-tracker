@@ -26,6 +26,8 @@ def argument_parser():
                        help='show notification with current rate')
     group.add_argument('--change', type=str, nargs='?',
                        help='change default currency to desired')
+    group.add_argument('--run', type=bool, const=True, nargs='?',
+                       help='run a currency tracking script')
 
     return parser
 
@@ -92,27 +94,13 @@ def show_changed_currency_info(last: dict, new: dict, curr: str = DEFAULT_CURREN
     else:
         sale_value = f"{new['sale']}"
 
-    return f'{curr} rate increased: {buy_value} || {sale_value}'
+    return f'{curr} rate changes: {buy_value} || {sale_value}'
 
 
-def every_day_notification(curr: str = DEFAULT_CURRENCY):
-    """Send notification with actual rates"""
-
-    result = get_currencies_rates(ENDPOINT)
-    get_specific_currency_info(result, curr)
-
-
-def main():
-    """Script entry point"""
+def run_track_script():
+    """Currency tracking script"""
 
     last_currency = None
-    args = argument_parser().parse_args()
-    argv = vars(args)
-
-    if argv['all']:
-        print(get_all_currencies())
-    elif argv['rate'] == 'show':
-        get_specific_currency_info()
 
     while True:
         try:
@@ -128,6 +116,26 @@ def main():
                 last_currency = value
         finally:
             time.sleep(TIMEOUT)
+
+# def every_day_notification(curr: str = DEFAULT_CURRENCY):
+#     """Send notification with actual rates"""
+#
+#     result = get_currencies_rates(ENDPOINT)
+#     get_specific_currency_info(result, curr)
+
+
+def main():
+    """Script entry point"""
+
+    args = argument_parser().parse_args()
+    argv = vars(args)
+
+    if argv['all']:
+        print(get_all_currencies())
+    elif argv['rate'] == 'show':
+        get_specific_currency_info()
+    elif argv['run']:
+        run_track_script()
         # schedule.every().hour.do(every_day_notification, curr=argv['set'])
     # else:
     #     schedule.every().hour.do(every_day_notification)
