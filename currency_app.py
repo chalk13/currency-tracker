@@ -24,6 +24,7 @@ def argument_parser():
     group.add_argument('--rate', type=str, nargs='?', default='hide',
                        choices=['show', 'hide'],
                        help='show notification with current rate')
+    # currency change option not implemented yet
     group.add_argument('--change', type=str, nargs='?',
                        help='change default currency to desired')
     group.add_argument('--run', type=bool, const=True, nargs='?',
@@ -103,6 +104,9 @@ def run_track_script():
     last_currency = None
 
     while True:
+        schedule.run_pending()
+        time.sleep(1)
+
         try:
             rates = get_currencies_rates(ENDPOINT)
             value = rates[DEFAULT_CURRENCY]
@@ -117,12 +121,6 @@ def run_track_script():
         finally:
             time.sleep(TIMEOUT)
 
-# def every_day_notification(curr: str = DEFAULT_CURRENCY):
-#     """Send notification with actual rates"""
-#
-#     result = get_currencies_rates(ENDPOINT)
-#     get_specific_currency_info(result, curr)
-
 
 def main():
     """Script entry point"""
@@ -135,14 +133,8 @@ def main():
     elif argv['rate'] == 'show':
         get_specific_currency_info()
     elif argv['run']:
+        schedule.every().day.at("10:00").do(get_specific_currency_info)
         run_track_script()
-        # schedule.every().hour.do(every_day_notification, curr=argv['set'])
-    # else:
-    #     schedule.every().hour.do(every_day_notification)
-
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)
 
 
 if __name__ == '__main__':
