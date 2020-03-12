@@ -18,11 +18,9 @@ def argument_parser():
 
     parser = argparse.ArgumentParser(description=description)
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('--all', type=bool, default=False, nargs='?',
-                       choices=[True, False],
+    group.add_argument('--all', action='store_true',
                        help='get list of availiable currencies')
-    group.add_argument('--rate', type=str, nargs='?', default='hide',
-                       choices=['show', 'hide'],
+    group.add_argument('--rate', action='store_true',
                        help='show notification with current rate')
     # currency change option not implemented yet
     group.add_argument('--change', type=str, nargs='?',
@@ -130,7 +128,7 @@ def main():
 
     if argv['all']:
         print(get_all_currencies())
-    elif argv['rate'] == 'show':
+    elif argv['rate']:
         get_specific_currency_info()
     elif argv['run']:
         schedule.every().day.at("10:00").do(get_specific_currency_info)
