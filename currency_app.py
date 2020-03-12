@@ -20,11 +20,8 @@ def argument_parser():
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--all', action='store_true',
                        help='get list of availiable currencies')
-    group.add_argument('--rate', action='store_true',
+    group.add_argument('--rate',  const='USD/UAH', type=str, nargs='?',
                        help='show notification with current rate')
-    # currency change option not implemented yet
-    group.add_argument('--change', type=str, nargs='?',
-                       help='change default currency to desired')
     group.add_argument('--run', type=bool, const=True, nargs='?',
                        help='run a currency tracking script')
 
@@ -125,11 +122,16 @@ def main():
 
     args = argument_parser().parse_args()
     argv = vars(args)
+    currencies = get_all_currencies()
 
     if argv['all']:
-        print(get_all_currencies())
+        print(currencies)
     elif argv['rate']:
-        get_specific_currency_info()
+        if argv['rate'] in currencies:
+            get_specific_currency_info(argv['rate'])
+        else:
+            print('You entered the wrong currency.\n'
+                  'Check --all option to see availiable currencies')
     elif argv['run']:
         schedule.every().day.at("10:00").do(get_specific_currency_info)
         run_track_script()
