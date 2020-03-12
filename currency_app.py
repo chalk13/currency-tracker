@@ -125,7 +125,9 @@ def main():
     currencies = get_all_currencies()
 
     if argv['all']:
-        print(currencies)
+        print('Availiable currencies:')
+        for index, currency in enumerate(currencies, 1):
+            print(f'{index}. {currency}')
     elif argv['rate']:
         if argv['rate'] in currencies:
             get_specific_currency_info(argv['rate'])
