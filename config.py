@@ -1,7 +1,6 @@
 import datetime
 
 ENDPOINT = 'https://obmenka24.kiev.ua/ua'
-DEFAULT_CURRENCY = 'USD/UAH'
 TODAY = f'{datetime.datetime.now().strftime("%A, %d %B")}'
 TIMEOUT = 60
 

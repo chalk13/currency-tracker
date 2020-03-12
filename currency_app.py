@@ -6,8 +6,7 @@ import schedule
 from gazpacho import get, Soup
 from klaxon import klaxonify
 
-from config import (ENDPOINT, DEFAULT_CURRENCY, TODAY, TIMEOUT, NAME, BUY,
-                    SALE, NUM)
+from config import ENDPOINT, TODAY, TIMEOUT, NAME, BUY, SALE, NUM
 
 
 def argument_parser():
@@ -22,7 +21,7 @@ def argument_parser():
                        help='get list of availiable currencies')
     group.add_argument('--rate',  const='USD/UAH', type=str, nargs='?',
                        help='show notification with current rate')
-    group.add_argument('--run', type=bool, const=True, nargs='?',
+    group.add_argument('--run', const='USD/UAH', type=str, nargs='?',
                        help='run a currency tracking script')
 
     return parser
@@ -60,7 +59,7 @@ def get_all_currencies() -> list:
 
 
 @klaxonify(title=TODAY, output_as_message=True)
-def get_specific_currency_info(curr: str = DEFAULT_CURRENCY):
+def get_specific_currency_info(curr: str):
     """Return information for specific currency"""
 
     rates = get_currencies_rates(ENDPOINT)
@@ -72,7 +71,7 @@ def get_specific_currency_info(curr: str = DEFAULT_CURRENCY):
 
 
 @klaxonify(title='Check the changes', output_as_message=True)
-def show_changed_currency_info(last: dict, new: dict, curr: str = DEFAULT_CURRENCY):
+def show_changed_currency_info(last: dict, new: dict, curr: str):
     up = '\u2191'
     down = '\u2193'
 
@@ -93,7 +92,7 @@ def show_changed_currency_info(last: dict, new: dict, curr: str = DEFAULT_CURREN
     return f'{curr} rate changes: {buy_value} || {sale_value}'
 
 
-def run_track_script():
+def run_track_script(curr: str):
     """Currency tracking script"""
 
     last_currency = None
@@ -104,14 +103,14 @@ def run_track_script():
 
         try:
             rates = get_currencies_rates(ENDPOINT)
-            value = rates[DEFAULT_CURRENCY]
+            value = rates[curr]
         except Exception as err:
             logging.exception(err)
         else:
             if last_currency is None:
                 last_currency = value
             elif last_currency != value:
-                show_changed_currency_info(last_currency, value)
+                show_changed_currency_info(last_currency, value, curr)
                 last_currency = value
         finally:
             time.sleep(TIMEOUT)
@@ -135,8 +134,9 @@ def main():
             print('You entered the wrong currency.\n'
                   'Check --all option to see availiable currencies')
     elif argv['run']:
-        schedule.every().day.at("10:00").do(get_specific_currency_info)
-        run_track_script()
+        schedule.every().day.at("10:00").do(get_specific_currency_info,
+                                            curr=argv['run'])
+        run_track_script(argv['run'])
 
 
 if __name__ == '__main__':
