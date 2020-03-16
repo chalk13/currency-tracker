@@ -1,10 +1,11 @@
 import argparse
 import logging
 import time
+from typing import Dict, Optional
 
-import schedule
-from gazpacho import get, Soup
-from klaxon import klaxonify
+import schedule # type: ignore
+from gazpacho import get, Soup # type: ignore
+from klaxon import klaxonify # type: ignore
 
 from config import ENDPOINT, TODAY, TIMEOUT, NAME, BUY, SALE, NUM
 
@@ -12,8 +13,8 @@ from config import ENDPOINT, TODAY, TIMEOUT, NAME, BUY, SALE, NUM
 def argument_parser():
     """Initialize argument parser"""
 
-    description = "Currency tracker is tool which allows user to " \
-                  "get currency rates on regular basis"
+    description: str = ("Currency tracker is tool which allows user to "
+                        "get currency rates on regular basis")
 
     parser = argparse.ArgumentParser(description=description)
     group = parser.add_mutually_exclusive_group()
@@ -30,7 +31,7 @@ def argument_parser():
 def get_currencies_rates(url: str) -> dict:
     """Return dictionary with exchange rates"""
 
-    result = {}
+    result: Dict[str, dict] = {}
 
     try:
         response = get(url)
@@ -54,15 +55,15 @@ def get_currencies_rates(url: str) -> dict:
 def get_all_currencies() -> list:
     """Return list of all currencies"""
 
-    rates = get_currencies_rates(ENDPOINT)
+    rates: Dict[str, dict] = get_currencies_rates(ENDPOINT)
     return [currency for currency in rates]
 
 
 @klaxonify(title=TODAY, output_as_message=True)
-def get_specific_currency_info(curr: str):
+def get_specific_currency_info(curr: str) -> str:
     """Return information for specific currency"""
 
-    rates = get_currencies_rates(ENDPOINT)
+    rates: Dict[str, dict] = get_currencies_rates(ENDPOINT)
     currency_info = rates.get(curr)
     if currency_info:
         return f'Rate for {curr}: {currency_info["buy"]}/{currency_info["sale"]}'
@@ -71,7 +72,7 @@ def get_specific_currency_info(curr: str):
 
 
 @klaxonify(title='Check the changes', output_as_message=True)
-def show_changed_currency_info(last: dict, new: dict, curr: str):
+def show_changed_currency_info(last: dict, new: dict, curr: str) -> str:
     up = '\u2191'
     down = '\u2193'
 
@@ -95,7 +96,7 @@ def show_changed_currency_info(last: dict, new: dict, curr: str):
 def run_track_script(curr: str):
     """Currency tracking script"""
 
-    last_currency = None
+    last_currency: Optional[float] = None
 
     while True:
         schedule.run_pending()

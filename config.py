@@ -1,11 +1,11 @@
 import datetime
 
-ENDPOINT = 'https://obmenka24.kiev.ua/ua'
-TODAY = f'{datetime.datetime.now().strftime("%A, %d %B")}'
-TIMEOUT = 60
+ENDPOINT: str = 'https://obmenka24.kiev.ua/ua'
+TODAY: str = f'{datetime.datetime.now().strftime("%A, %d %B")}'
+TIMEOUT: int = 60
 
 # endpoint classes names
-NAME = 'currencies__block-name'
-BUY = 'currencies__block-buy'
-SALE = 'currencies__block-sale'
-NUM = 'currencies__block-num'
+NAME: str = 'currencies__block-name'
+BUY: str = 'currencies__block-buy'
+SALE: str = 'currencies__block-sale'
+NUM: str = 'currencies__block-num'
