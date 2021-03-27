@@ -1,7 +1,7 @@
 # Currency tracker
 This console program will help you to track changes for a given currency and receive notifications in case of some changes. You can also check the available currencies and receive immediate notification with the current rate.
 
-### Installation
+## Installation
 Clone the repository to your local machine. With virtualenv enviroment activated install requirements:
 ```bash
 pip install -r requirements.txt

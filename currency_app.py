@@ -4,10 +4,9 @@ import time
 from typing import Dict, Optional
 
 import schedule  # type: ignore
+from config import BUY, ENDPOINT, NAME, NUM, SALE, TIMEOUT, TODAY
 from gazpacho import Soup, get  # type: ignore
 from klaxon import klaxonify  # type: ignore
-
-from config import BUY, ENDPOINT, NAME, NUM, SALE, TIMEOUT, TODAY
 
 
 def argument_parser():
