@@ -1,14 +1,14 @@
-## Currency tracker
+# Currency tracker
 This console program will help you to track changes for a given currency and receive notifications in case of some changes. You can also check the available currencies and receive immediate notification with the current rate.
 
 ### Installation
 Clone the repository to your local machine. With virtualenv enviroment activated install requirements:
-```
-$ pip install -r requirements.txt
+```bash
+pip install -r requirements.txt
 ```
 **How to run**
-```
-$ python3 currency_app.py --help
+```bash
+python3 currency_app.py --help
 usage: currency_app.py [-h] [--all | --rate [RATE] | --run [RUN]]
 
 Currency tracker is tool which allows user to get currency rates on regular
@@ -21,20 +21,20 @@ optional arguments:
   --run [RUN]    run a currency tracking script
 ```
 **Example commands**:
-```
+```bash
 # Get a nofitication with a default rate (USD/UAH)
-$ python3 currency_app.py --rate
+python3 currency_app.py --rate
 ```
-```
+```bash
 # Run a program to track changes in exchange rate (USD/UAH)
-$ python3 currency_app.py --run
+python3 currency_app.py --run
 ```
-```
+```bash
 # Get the list of available currencies
-$ python3 currency_app.py --all
+python3 currency_app.py --all
 ```
-```
+```bash
 # Specify the desired currency instead of the default currency
-$ python3 currency_app.py --rate EUR/UAH
-$ python3 currency_app.py --run EUR/USD
+python3 currency_app.py --rate EUR/UAH
+python3 currency_app.py --run EUR/USD
 ```
