@@ -50,14 +50,15 @@ def get_currencies_rates(url: str) -> dict:
         response = get(url)
         soup = Soup(response)
 
-        currencies = soup.find("span", {"class": NAME})
-        buy = soup.find("span", {"class": BUY})
+        currencies = [cur.find("a") for cur in soup.find("div", {"class": NAME})]
+        buy = soup.find("div", {"class": BUY})
         buy_values = [value.find("div", {"class": NUM}).text for value in buy]
-        sale = soup.find("span", {"class": SALE})
+        sale = soup.find("div", {"class": SALE})
         sale_values = [value.find("div", {"class": NUM}).text for value in sale]
 
         for cur, buy_num, sale_num in zip(currencies, buy_values, sale_values):
-            result[cur.text] = {"buy": float(buy_num), "sale": float(sale_num)}
+            cur = cur.text.split()[-1]
+            result[cur] = {"buy": float(buy_num), "sale": float(sale_num)}
 
     except Exception as err:
         logging.exception(err)
