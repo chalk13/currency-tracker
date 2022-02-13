@@ -4,7 +4,6 @@ import argparse
 import logging
 import time
 from typing import Dict, Optional
-from urllib.error import HTTPError
 
 import schedule  # type: ignore
 from gazpacho import Soup, get  # type: ignore
