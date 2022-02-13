@@ -1,4 +1,5 @@
-![Build Status](https://github.com/Mazzart/currency_tracker/workflows/Super-Linter/badge.svg)
+![Build Status - Super-Linter](https://github.com/Mazzart/currency-tracker/workflows/Super-Linter/badge.svg)
+![Build Status - Pylint](https://github.com/Mazzart/currency-tracker/workflows/Pylint/badge.svg)
 
 # Currency tracker
 This console program will help you to track changes for a given currency and receive notifications in case of some changes. You can also check the available currencies and receive immediate notification with the current rate.
