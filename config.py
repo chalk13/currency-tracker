@@ -1,6 +1,8 @@
+"""Configuration file with default variables"""
+
 import datetime
 
-ENDPOINT: str = "https://obmenka24.kiev.ua/ua"
+ENDPOINT: str = "https://obmenka24.kiev.ua/uaa"
 TODAY: str = f"{datetime.datetime.now().strftime('%A, %d %B')}"
 TIMEOUT: int = 60
 

@@ -1,12 +1,16 @@
+"""Main app"""
+
 import argparse
 import logging
 import time
 from typing import Dict, Optional
+from urllib.error import HTTPError
 
 import schedule  # type: ignore
-from config import BUY, ENDPOINT, NAME, NUM, SALE, TIMEOUT, TODAY
 from gazpacho import Soup, get  # type: ignore
 from klaxon import klaxonify  # type: ignore
+
+from config import BUY, ENDPOINT, NAME, NUM, SALE, TIMEOUT, TODAY
 
 
 def argument_parser():
@@ -69,7 +73,7 @@ def get_all_currencies() -> list:
     """Return list of all currencies"""
 
     rates: Dict[str, dict] = get_currencies_rates(ENDPOINT)
-    return [currency for currency in rates]
+    return list(rates)
 
 
 @klaxonify(title=TODAY, output_as_message=True)
@@ -80,26 +84,30 @@ def get_specific_currency_info(curr: str) -> str:
     currency_info = rates.get(curr)
     if currency_info:
         return f'Rate for {curr}: {currency_info["buy"]}/{currency_info["sale"]}'
-    else:
-        return "Check currency name and try again."
+    return "Check currency name and try again."
 
 
 @klaxonify(title="Check the changes", output_as_message=True)
 def show_changed_currency_info(last: dict, new: dict, curr: str) -> str:
-    up = "\u2191"
-    down = "\u2193"
+    """
+    Shows the status of the currency change with an up or down arrow
+    and the corresponding value
+    """
+
+    upwards = "\u2191"
+    downwards = "\u2193"
 
     if last["buy"] < new["buy"]:
-        buy_value = f"\n{new['buy']} {up}{round(new['buy'] - last['buy'], 2)}"
+        buy_value = f"\n{new['buy']} {upwards}{round(new['buy'] - last['buy'], 2)}"
     elif last["buy"] > new["buy"]:
-        buy_value = f"\n{new['buy']} {down}{round(last['buy'] - new['buy'], 2)}"
+        buy_value = f"\n{new['buy']} {downwards}{round(last['buy'] - new['buy'], 2)}"
     else:
         buy_value = f"\n{new['buy']}"
 
     if last["sale"] < new["sale"]:
-        sale_value = f"{new['sale']} {up}{round(new['sale'] - last['sale'], 2)}"
+        sale_value = f"{new['sale']} {upwards}{round(new['sale'] - last['sale'], 2)}"
     elif last["sale"] > new["sale"]:
-        sale_value = f"{new['sale']} {down}{round(last['sale'] - new['sale'], 2)}"
+        sale_value = f"{new['sale']} {downwards}{round(last['sale'] - new['sale'], 2)}"
     else:
         sale_value = f"{new['sale']}"
 
