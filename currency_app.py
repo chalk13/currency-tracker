@@ -5,6 +5,8 @@ import logging
 import time
 from typing import Dict, Optional
 
+from urllib.error import HTTPError, URLError
+
 import schedule  # type: ignore
 from gazpacho import Soup, get  # type: ignore
 from klaxon import klaxonify  # type: ignore
@@ -48,10 +50,15 @@ def get_currencies_rates(url: str) -> dict:
 
     result: Dict[str, dict] = {}
 
+    response = None
+
     try:
         response = get(url)
-        soup = Soup(response)
+    except (HTTPError, URLError) as err:
+        logging.exception(err)
 
+    if response:
+        soup = Soup(response)
         currencies = [cur.find("a") for cur in soup.find("div", {"class": NAME})]
         buy = soup.find("div", {"class": BUY})
         buy_values = [value.find("div", {"class": NUM}).text for value in buy]
@@ -61,9 +68,6 @@ def get_currencies_rates(url: str) -> dict:
         for cur, buy_num, sale_num in zip(currencies, buy_values, sale_values):
             cur = cur.text.split()[-1]
             result[cur] = {"buy": float(buy_num), "sale": float(sale_num)}
-
-    except Exception as err:
-        logging.exception(err)
 
     return result
 
@@ -122,19 +126,19 @@ def run_track_script(curr: str):
         schedule.run_pending()
         time.sleep(1)
 
-        try:
-            rates = get_currencies_rates(ENDPOINT)
-            value = rates[curr]
-        except Exception as err:
-            logging.exception(err)
-        else:
+        rates = get_currencies_rates(ENDPOINT)
+        value = rates.get(curr)
+
+        if value:
             if last_currency is None:
                 last_currency = value
             elif last_currency != value:
                 show_changed_currency_info(last_currency, value, curr)
                 last_currency = value
-        finally:
-            time.sleep(TIMEOUT)
+        else:
+            break
+
+        time.sleep(TIMEOUT)
 
 
 def main():
