@@ -2,7 +2,7 @@
 
 import datetime
 
-ENDPOINT: str = "https://obmenka24.kiev.ua/uaa"
+ENDPOINT: str = "https://obmenka24.kiev.ua/ua"
 TODAY: str = f"{datetime.datetime.now().strftime('%A, %d %B')}"
 TIMEOUT: int = 60
 
