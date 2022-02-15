@@ -1,4 +1,3 @@
-![Build Status - Super-Linter](https://github.com/Mazzart/currency-tracker/workflows/Super-Linter/badge.svg)
 ![Build Status - Pylint](https://github.com/Mazzart/currency-tracker/workflows/Pylint/badge.svg)
 
 # Currency tracker
